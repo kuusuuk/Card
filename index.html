@@ -3,164 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天文指引 | 來自宇宙的訊息</title>
+    <title>天文指引卡 | Astronomical Guidance</title>
     <style>
-        /* --- 網頁樣式設定 --- */
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #e2e8f0;
+            --accent: #fcd34d; /* 星光金 */
+            --sub-text: #94a3b8;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background-color: #0b0d17; /* 深夜藍背景 */
-            color: #e0e6ed; /* 月光白文字 */
-            font-family: "Helvetica Neue", "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+            color: var(--text-main);
+            font-family: "PingFang TC", "Noto Sans TC", sans-serif;
             height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
-                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
-            background-size: 550px 550px, 350px 350px, 250px 250px;
-            background-position: 0 0, 40px 60px, 130px 270px;
+            position: relative;
         }
 
+        /* 背景星空特效 */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
+            background-size: 200px 200px;
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+            100% { opacity: 0.8; }
+        }
+
+        /* 主要容器 */
         .container {
+            z-index: 1;
             text-align: center;
-            max-width: 600px;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.05); /* 半透明玻璃質感 */
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 400px;
+            width: 90%;
+            padding: 20px;
         }
 
         h1 {
-            font-size: 1.8rem;
-            letter-spacing: 3px;
-            margin-bottom: 30px;
-            color: #aebccf;
             font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            color: var(--sub-text);
+            text-transform: uppercase;
         }
 
+        /* 卡片設計 */
         .card-display {
-            min-height: 200px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px 24px;
+            min-height: 320px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-bottom: 30px;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             transition: all 0.5s ease;
+            /* 【修改點 1】這裡原本是 40px，改小讓按鈕往上移 */
+            margin-bottom: 25px; 
+            position: relative;
         }
 
-        .star-name {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        .card-content {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            /* 確保隱藏時不佔位 */
+            display: none; 
         }
 
-        .guidance-text {
-            font-size: 1.1rem;
+        .card-content.active {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .card-number {
+            font-size: 0.8rem;
+            color: var(--sub-text);
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            margin: 0 0 10px 0;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .card-keywords {
+            font-size: 0.9rem;
+            color: var(--sub-text);
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .card-text {
+            font-size: 1.05rem;
             line-height: 1.8;
-            color: #d1d5db;
-            font-style: italic;
+            text-align: justify;
+            color: #f1f5f9;
         }
 
-        button {
+        /* 按鈕設計 */
+        .draw-btn {
             background: transparent;
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.4);
-            padding: 12px 30px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 12px 36px;
             font-size: 1rem;
+            letter-spacing: 0.1em;
             cursor: pointer;
             border-radius: 50px;
-            letter-spacing: 2px;
             transition: all 0.3s ease;
+            /* 避免按鈕在切換文字時跳動 */
+            min-width: 160px; 
         }
 
-        button:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: #fff;
-            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        .draw-btn:hover {
+            background: var(--accent);
+            color: #0f172a;
+            box-shadow: 0 0 15px rgba(252, 211, 77, 0.4);
+        }
+        
+        /* 禁用狀態的按鈕樣式 */
+        .draw-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
-        .footer {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: #5c677d;
+        .placeholder {
+            color: var(--sub-text);
+            font-style: italic;
+            transition: opacity 0.3s ease;
         }
+        
+        /* 用於淡出 placeholder */
+        .placeholder.fade-out {
+            opacity: 0;
+        }
+
     </style>
 </head>
 <body>
 
+    <div class="stars"></div>
+
     <div class="container">
-        <h1>ASTRONOMICAL GUIDANCE</h1>
+        <h1>Astronomical Guidance</h1>
         
-        <div class="card-display" id="displayArea">
-            <p style="opacity: 0.6;">凝視星空，尋求指引...</p>
+        <div class="card-display" id="cardArea">
+            <div id="placeholderText" class="placeholder">
+                <p>宇宙無聲，<br>但它一直在對你說話。<br><br>請按下觀測鈕...</p>
+            </div>
+            <div id="cardContent" class="card-content">
+                <div class="card-number" id="cNum">NO. --</div>
+                <h2 class="card-title" id="cTitle">--</h2>
+                <div class="card-keywords" id="cKey">--</div>
+                <p class="card-text" id="cText">--</p>
+            </div>
         </div>
 
-        <button onclick="drawCard()">接收訊號</button>
-        
-        <div class="footer">
-            Designed for the Stargazer
-        </div>
+        <button id="actionBtn" class="draw-btn" onclick="handleButtonClick()">觀測星象</button>
     </div>
 
     <script>
-        // --- 這裡是可以修改內容的地方 ---
-        // 格式為：{ name: "天體名稱", text: "指引內容" }
+        // 完整資料庫：30 張卡片 (省略內容以節省篇幅，請使用你原本完整的資料庫)
         const cards = [
-            {
-                name: "Sirius 天狼星",
-                text: "即使在最寒冷的冬夜，你依然是最耀眼的存在。不需要透過別人的反射來證明光亮，你本身就是光源。專注於燃燒自己，那些雜訊自然會隱沒於黑暗之中。"
-            },
-            {
-                name: "Moon Phases 月相",
-                text: "盈虧是宇宙的呼吸。當你感到能量低落或只有一半的自己時，請記得這不是缺陷，而是週期。接納現在的陰影，圓滿會在下一個循環中自然抵達。"
-            },
-            {
-                name: "Nebula 星雲",
-                text: "混亂與塵埃並非毀滅，而是孕育恆星的搖籃。你此刻感受到的迷惘與散亂，正是創造力正在重組的過程。在混沌中，保持耐心。"
-            },
-            {
-                name: "Black Hole 黑洞",
-                text: "巨大的引力來自於極致的靜默。不需要急著解釋或外求，向內坍縮，在內心的最深處，你會找到連光都無法逃脫的強大力量。"
-            },
-            {
-                name: "Comet 彗星",
-                text: "有些相遇註定是短暫的軌道交錯。不要因為它的離去而悲傷，要感謝它帶來的尾跡曾劃亮你的夜空。放手，是為了讓它繼續它的旅程，也讓你回到你的軌道。"
-            },
-            {
-                name: "Supernova 超新星",
-                text: "當舊的結構無法再支撐你的能量時，崩塌是必然的。這場爆炸雖然劇烈且痛苦，但它將把構成生命的元素拋灑向宇宙，成為下一個星系的養分。"
-            }
+            // --- 第一組：太陽系家族 (01-10) ---
+            { id: "01", title: "水星 Mercury", keywords: "溝通 · 流動 · 敏捷", text: "水星運轉極快，稍縱即逝的念頭往往是最珍貴的寶藏。今天，不要把話藏在心裡，也不要過度思考。像風一樣，把你的想法傳遞出去吧，現在就是最好的時機。" },
+            { id: "02", title: "太陽 The Sun", keywords: "本質 · 發光 · 自信", text: "太陽從不擔心自己是否太刺眼，它只是燃燒。請你停止懷疑自己是否『夠好』。你原本的樣子，就足以照亮某個人的世界。今天，請大方地展現你的才華。" },
+            { id: "03", title: "月亮 The Moon", keywords: "情緒 · 安全感 · 週期", text: "月有陰晴圓缺，你的心情也是。不要責怪自己今天的低落或敏感，那是靈魂在休息的潮汐。接納自己的脆弱，這份溫柔會成為保護你的力量。" },
+            { id: "04", title: "金星 Venus", keywords: "愛 · 美感 · 價值", text: "美，往往存在於不完美的裂縫之中。今天請把專注力放在讓自己感到『愉悅』的小事上——一杯好茶、一首好歌。善待自己，是感受愛的開始。" },
+            { id: "05", title: "火星 Mars", keywords: "行動 · 勇氣 · 界線", text: "憤怒不是壞事，它是在告訴你，有些界線被跨越了。不要壓抑那股想要改變的衝動。將這股能量轉化為行動，去爭取你真正渴望的東西。" },
+            { id: "06", title: "木星 Jupiter", keywords: "擴張 · 幸運 · 信任", text: "有時候，好運只是因為你願意相信它會發生。試著放寬你的視野，不要糾結於眼前的細節。大膽一點，宇宙準備了比你想像中更大的禮物。" },
+            { id: "07", title: "土星 Saturn", keywords: "考驗 · 時間 · 結構", text: "成長是緩慢的，像是石頭被水流打磨的過程。現在感受到的壓力，不是為了壓垮你，而是為了幫你建立更穩固的根基。請相信時間的魔法，堅持下去。" },
+            { id: "08", title: "天王星 Uranus", keywords: "改變 · 獨特 · 突破", text: "為什麼要和別人一樣呢？當你感到與世界格格不入時，那正是你獨特光芒閃爍的時刻。打破慣例吧，嘗試一個從未做過的決定，驚喜就在轉角。" },
+            { id: "09", title: "海王星 Neptune", keywords: "夢境 · 靈感 · 模糊", text: "看不清路的時候，就閉上眼睛聽聽直覺吧。霧氣終會散去，但在那之前，允許自己做一場夢。邏輯無法解決的問題，靈感會給你答案。" },
+            { id: "10", title: "冥王星 Pluto", keywords: "轉化 · 重生 · 恐懼", text: "必須先學會放手，雙手騰空了，才能接住新的東西。雖然告別過去令人恐懼，但請相信，灰燼之中必定會有新生。徹底的結束，是為了更好的開始。" },
+            
+            // --- 第二組：深空天體 (11-20) ---
+            { id: "11", title: "超新星 Supernova", keywords: "釋放 · 壯烈 · 新生", text: "這不是毀滅，而是一場華麗的釋放。當你覺得生活正在分崩離析，請記得，超新星爆炸後會散播生命的種子。此刻的混亂，正是為了孕育下一個更宏大的你。" },
+            { id: "12", title: "黑洞 Black Hole", keywords: "未知 · 吸引 · 臣服", text: "有些事情是無法逃避的重力，越是掙扎，越是痛苦。不如停止對抗，順著引力墜落吧。在絕對的黑暗之後，你會發現，穿越恐懼的唯一方法，就是走進去。" },
+            { id: "13", title: "星雲 Nebula", keywords: "混沌 · 孕育 · 等待", text: "你看起來像是一團模糊的塵埃，迷惘又混亂。但請溫柔地看待這份混沌，因為星星就是從這裡誕生的。不需要急著看清形狀，給自己一點時間發酵吧。" },
+            { id: "14", title: "銀河 Galaxy", keywords: "歸屬 · 渺小 · 連結", text: "當你覺得孤單，覺得這世界沒人懂你時，抬頭看看。我們都是這巨大旋臂上的一顆微塵，卻也因此緊緊相連。你並不孤單，你是這宏大故事裡不可或缺的一部分。" },
+            { id: "15", title: "雙星 Binary Stars", keywords: "關係 · 牽引 · 距離", text: "最好的關係，不是合而為一，而是像雙星一樣，彼此環繞卻不相撞。保持適當的距離，才能在互相照耀的同時，依然擁有自己的軌道與光芒。" },
+            { id: "16", title: "紅巨星 Red Giant", keywords: "膨脹 · 燃燒 · 餘暉", text: "你已經很努力地燃燒很久了，現在感到疲憊是正常的。不需要強迫自己永遠維持在巔峰。允許自己慢慢變老、變慢，這種成熟與寬容的光芒，有著另一種溫度。" },
+            { id: "17", title: "白矮星 White Dwarf", keywords: "堅毅 · 內斂 · 永恆", text: "當激情的火焰褪去，留下的才是本質。你不需再向誰證明什麼，你內在的高密度能量，足以支撐你走過漫長的歲月。安靜地發光，比喧嘩更具力量。" },
+            { id: "18", title: "暗物質 Dark Matter", keywords: "隱形 · 支持 · 信任", text: "眼睛看不見的東西，往往才是支撐世界的關鍵。就像那些默默愛你的人，或是你內在的信念。雖然無法具體描述，但請相信這股無形的力量，它一直都在托著你。" },
+            { id: "19", title: "光年 Light Year", keywords: "距離 · 過去 · 療癒", text: "我們看見的星光，都是幾千年前出發的影子。如果當下的痛苦太過清晰，試著拉開一點時間的距離吧。把現在的煩惱當作遙遠的星光來看，它終將成為美麗的過去。" },
+            { id: "20", title: "事件視界 Event Horizon", keywords: "臨界 · 決心 · 不回頭", text: "你已經站在臨界點上了，再往前一步，就沒有回頭路。這很令人害怕，但也令人興奮。既然回不去了，那就義無反顧地跨過去吧。新的物理法則正在對面等你。" },
+
+            // --- 第三組：天文現象 (21-30) ---
+            { id: "21", title: "日食 Solar Eclipse", keywords: "陰影 · 歸零 · 暫停", text: "光芒暫時消失，不是為了讓你陷入黑暗，而是為了讓你休息。生命需要這種強制的『重開機』。如果現在一片漆黑，請安心地閉上眼，等待下一次的光亮。" },
+            { id: "22", title: "流星雨 Meteor Shower", keywords: "祈願 · 把握 · 稍縱即逝", text: "機會稍縱即逝，就像劃過天際的流星。當直覺告訴你『就是現在』的時候，不要猶豫，不要等待完美的計畫。伸出手去接住那份幸運，那一瞬間就是永恆。" },
+            { id: "23", title: "逆行 Retrograde", keywords: "回顧 · 修正 · 慢下來", text: "覺得諸事不順、進度停滯嗎？那不是你的錯，是宇宙要你慢下來。有些過去的課題需要被重新檢視。現在不適合衝刺，適合整理行囊，把鞋帶綁好再出發。" },
+            { id: "24", title: "極光 Aurora", keywords: "奇蹟 · 禮物 · 不期而遇", text: "最美好的事物，往往發生在最寒冷的夜裡。你正處於一段艱難的時期，但請保持期待。宇宙準備了一份你意想不到的禮物，會在你不經意抬頭時，悄然降臨。" },
+            { id: "25", title: "潮汐 Tides", keywords: "呼吸 · 漲退 · 順勢", text: "生命有漲潮，也有退潮。不要在退潮的時候強求豐收，也不要在漲潮的時候恐懼淹沒。順應這個節奏，學會呼吸。順勢而為，你會發現游泳比掙扎更省力。" },
+            { id: "26", title: "星座 Constellation", keywords: "連結 · 意義 · 點連成線", text: "單獨看一顆星或許沒有意義，但連起來就是故事。你現在經歷的零碎片段，或許看似無關，但未來的某一天，你會發現它們連成了一幅美麗的圖畫。相信過程。" },
+            { id: "27", title: "太陽黑子 Sunspots", keywords: "瑕疵 · 接納 · 真實", text: "即使是太陽也有黑點，那是磁場活動最強烈的地方。不要害怕暴露你的缺點或脆弱，那正是你最有生命力、最真實的部分。完美很無聊，真實才動人。" },
+            { id: "28", title: "重力透鏡 Lensing", keywords: "視角 · 扭曲 · 真相", text: "有時候眼見不一定為憑。你的恐懼可能扭曲了現實，讓困難看起來比實際巨大。試著換一個角度，透過別人的眼睛看世界，你會發現事情其實沒有那麼糟糕。" },
+            { id: "29", title: "藍月 Blue Moon", keywords: "難得 · 例外 · 驚喜", text: "這是一個打破規則的時刻。『不可能』的事情正在發生。如果你一直渴望做某個大膽的決定，或是等待一個罕見的時機，就是現在了。抓住這份稀有的運氣。" },
+            { id: "30", title: "星塵 Stardust", keywords: "本源 · 歸屬 · 我們", text: "你身體裡的每一個原子，都曾經是某顆恆星的一部分。你並不渺小，你本身就是宇宙的歷史。無論你走到哪裡，你都屬於這片星空。你從未離開家，你就是星辰。" }
         ];
 
+        // 【修改點 2】新增一個狀態變數，記錄現在是否顯示卡片
+        let isCardDisplayed = false;
+
+        const placeholder = document.getElementById('placeholderText');
+        const content = document.getElementById('cardContent');
+        const btn = document.getElementById('actionBtn');
+
+        // 【修改點 3】主要的按鈕點擊邏輯
+        function handleButtonClick() {
+            if (isCardDisplayed) {
+                resetView(); // 如果已經顯示卡片，就執行重置
+            } else {
+                drawCard();  // 如果還沒顯示，就執行抽卡
+            }
+        }
+
+        // 抽卡功能
         function drawCard() {
-            const display = document.getElementById('displayArea');
-            const button = document.querySelector('button');
+            // 鎖定按鈕
+            btn.disabled = true;
+            btn.innerText = "觀測中...";
             
-            // 簡單的淡出動畫效果
-            display.style.opacity = 0;
+            // 淡出 placeholder
+            placeholder.classList.add('fade-out');
             
             setTimeout(() => {
-                // 隨機選取一張牌
+                placeholder.style.display = 'none'; // 真正隱藏 placeholder
+                
+                // 隨機抽選並更新內容
                 const randomIndex = Math.floor(Math.random() * cards.length);
                 const card = cards[randomIndex];
+                document.getElementById('cNum').innerText = `NO. ${card.id}`;
+                document.getElementById('cTitle').innerText = card.title;
+                document.getElementById('cKey').innerText = card.keywords;
+                document.getElementById('cText').innerText = card.text;
+
+                // 顯示卡片內容
+                content.classList.add('active');
                 
-                // 更新內容
-                display.innerHTML = `
-                    <div class="star-name">${card.name}</div>
-                    <div class="guidance-text">${card.text}</div>
-                `;
-                
-                // 淡入
-                display.style.opacity = 1;
-                button.innerText = "再次接收";
-            }, 300);
+                // 恢復按鈕，並更改文字
+                btn.disabled = false;
+                btn.innerText = "新的指引"; // 改成新的指引
+                isCardDisplayed = true; // 更新狀態為已顯示
+
+            }, 500); // 等待 placeholder 淡出動畫完成
+        }
+
+        // 【修改點 4】新增重置功能
+        function resetView() {
+            // 淡出卡片內容
+            content.classList.remove('active');
+            
+            setTimeout(() => {
+                placeholder.style.display = 'block'; // 顯示 placeholder 容器
+                // 稍微延遲一下再移除 fade-out class，讓淡入效果更順
+                setTimeout(() => placeholder.classList.remove('fade-out'), 50);
+
+                btn.innerText = "觀測星象"; // 按鈕變回一開始的文字
+                isCardDisplayed = false; // 更新狀態為未顯示
+            }, 500); // 等待卡片淡出動畫完成
         }
     </script>
 </body>
