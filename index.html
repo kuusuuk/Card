@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天文指引卡 | Astronomical Guidance</title>
+    <title>LUCID DREAM | 清醒夢</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -64,9 +64,9 @@
 
         h1 {
             font-weight: 300;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.3em; /* 稍微增加字距，讓 LUCID DREAM 更優雅 */
             margin-bottom: 30px;
-            font-size: 1.2rem;
+            font-size: 1.5rem;     /* 稍微加大標題 */
             color: var(--sub-text);
             text-transform: uppercase;
         }
@@ -85,8 +85,7 @@
             align-items: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             transition: all 0.5s ease;
-            /* 【修改點 1】這裡原本是 40px，改小讓按鈕往上移 */
-            margin-bottom: 25px; 
+            margin-bottom: 35px; /* 增加與按鈕的距離 */
             position: relative;
         }
 
@@ -94,7 +93,6 @@
             opacity: 0;
             transform: translateY(10px);
             transition: opacity 0.6s ease, transform 0.6s ease;
-            /* 確保隱藏時不佔位 */
             display: none; 
         }
 
@@ -104,12 +102,7 @@
             display: block;
         }
 
-        .card-number {
-            font-size: 0.8rem;
-            color: var(--sub-text);
-            margin-bottom: 10px;
-            letter-spacing: 0.1em;
-        }
+        /* 編號樣式已移除 */
 
         .card-title {
             font-size: 1.8rem;
@@ -134,19 +127,19 @@
             color: #f1f5f9;
         }
 
-        /* 按鈕設計 */
+        /* 按鈕設計 - 已依照需求加粗加大 */
         .draw-btn {
             background: transparent;
             border: 1px solid var(--accent);
             color: var(--accent);
-            padding: 12px 36px;
-            font-size: 1rem;
+            padding: 14px 40px;      /* 增加內距，讓按鈕更大顆 */
+            font-size: 1.3rem;       /* 字體加大 */
+            font-weight: 700;        /* 粗體 */
             letter-spacing: 0.1em;
             cursor: pointer;
             border-radius: 50px;
             transition: all 0.3s ease;
-            /* 避免按鈕在切換文字時跳動 */
-            min-width: 160px; 
+            min-width: 180px; 
         }
 
         .draw-btn:hover {
@@ -155,7 +148,6 @@
             box-shadow: 0 0 15px rgba(252, 211, 77, 0.4);
         }
         
-        /* 禁用狀態的按鈕樣式 */
         .draw-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -168,7 +160,6 @@
             transition: opacity 0.3s ease;
         }
         
-        /* 用於淡出 placeholder */
         .placeholder.fade-out {
             opacity: 0;
         }
@@ -180,25 +171,24 @@
     <div class="stars"></div>
 
     <div class="container">
-        <h1>Astronomical Guidance</h1>
+        <h1>LUCID DREAM</h1>
         
         <div class="card-display" id="cardArea">
             <div id="placeholderText" class="placeholder">
-                <p>宇宙無聲，<br>但它一直在對你說話。<br><br>請按下觀測鈕...</p>
+                <p>意識深處，<br>夢境正在解析。<br><br>請按下連結...</p>
             </div>
             <div id="cardContent" class="card-content">
-                <div class="card-number" id="cNum">NO. --</div>
                 <h2 class="card-title" id="cTitle">--</h2>
                 <div class="card-keywords" id="cKey">--</div>
                 <p class="card-text" id="cText">--</p>
             </div>
         </div>
 
-        <button id="actionBtn" class="draw-btn" onclick="handleButtonClick()">觀測星象</button>
+        <button id="actionBtn" class="draw-btn" onclick="handleButtonClick()">進入夢境</button>
     </div>
 
     <script>
-        // 完整資料庫：30 張卡片 (省略內容以節省篇幅，請使用你原本完整的資料庫)
+        // 這裡是你完整的 30 張卡片資料庫，保留完整內容
         const cards = [
             // --- 第一組：太陽系家族 (01-10) ---
             { id: "01", title: "水星 Mercury", keywords: "溝通 · 流動 · 敏捷", text: "水星運轉極快，稍縱即逝的念頭往往是最珍貴的寶藏。今天，不要把話藏在心裡，也不要過度思考。像風一樣，把你的想法傳遞出去吧，現在就是最好的時機。" },
@@ -237,66 +227,57 @@
             { id: "30", title: "星塵 Stardust", keywords: "本源 · 歸屬 · 我們", text: "你身體裡的每一個原子，都曾經是某顆恆星的一部分。你並不渺小，你本身就是宇宙的歷史。無論你走到哪裡，你都屬於這片星空。你從未離開家，你就是星辰。" }
         ];
 
-        // 【修改點 2】新增一個狀態變數，記錄現在是否顯示卡片
         let isCardDisplayed = false;
 
         const placeholder = document.getElementById('placeholderText');
         const content = document.getElementById('cardContent');
         const btn = document.getElementById('actionBtn');
 
-        // 【修改點 3】主要的按鈕點擊邏輯
         function handleButtonClick() {
             if (isCardDisplayed) {
-                resetView(); // 如果已經顯示卡片，就執行重置
+                resetView();
             } else {
-                drawCard();  // 如果還沒顯示，就執行抽卡
+                drawCard();
             }
         }
 
-        // 抽卡功能
         function drawCard() {
-            // 鎖定按鈕
             btn.disabled = true;
-            btn.innerText = "觀測中...";
+            btn.innerText = "解析中...";
             
-            // 淡出 placeholder
             placeholder.classList.add('fade-out');
             
             setTimeout(() => {
-                placeholder.style.display = 'none'; // 真正隱藏 placeholder
+                placeholder.style.display = 'none';
                 
-                // 隨機抽選並更新內容
                 const randomIndex = Math.floor(Math.random() * cards.length);
                 const card = cards[randomIndex];
-                document.getElementById('cNum').innerText = `NO. ${card.id}`;
+                
+                // 修改點 1：移除了 cNum 的資料寫入，只保留標題、關鍵字和內容
                 document.getElementById('cTitle').innerText = card.title;
                 document.getElementById('cKey').innerText = card.keywords;
                 document.getElementById('cText').innerText = card.text;
 
-                // 顯示卡片內容
                 content.classList.add('active');
                 
-                // 恢復按鈕，並更改文字
                 btn.disabled = false;
-                btn.innerText = "新的指引"; // 改成新的指引
-                isCardDisplayed = true; // 更新狀態為已顯示
+                // 修改點 3：按鈕文字改為「新的指引」（CSS 已設定為大且粗）
+                btn.innerText = "新的指引"; 
+                isCardDisplayed = true;
 
-            }, 500); // 等待 placeholder 淡出動畫完成
+            }, 500);
         }
 
-        // 【修改點 4】新增重置功能
         function resetView() {
-            // 淡出卡片內容
             content.classList.remove('active');
             
             setTimeout(() => {
-                placeholder.style.display = 'block'; // 顯示 placeholder 容器
-                // 稍微延遲一下再移除 fade-out class，讓淡入效果更順
+                placeholder.style.display = 'block';
                 setTimeout(() => placeholder.classList.remove('fade-out'), 50);
 
-                btn.innerText = "觀測星象"; // 按鈕變回一開始的文字
-                isCardDisplayed = false; // 更新狀態為未顯示
-            }, 500); // 等待卡片淡出動畫完成
+                btn.innerText = "進入夢境"; 
+                isCardDisplayed = false;
+            }, 500);
         }
     </script>
 </body>
