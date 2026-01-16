@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天文指引 | 來自宇宙的訊息</title>
+    <style>
+        /* --- 網頁樣式設定 --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b0d17; /* 深夜藍背景 */
+            color: #e0e6ed; /* 月光白文字 */
+            font-family: "Helvetica Neue", "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05); /* 半透明玻璃質感 */
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+            color: #aebccf;
+            font-weight: 300;
+        }
+
+        .card-display {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-bottom: 30px;
+            transition: all 0.5s ease;
+        }
+
+        .star-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .guidance-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #d1d5db;
+            font-style: italic;
+        }
+
+        button {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 12px 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 50px;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #5c677d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>ASTRONOMICAL GUIDANCE</h1>
+        
+        <div class="card-display" id="displayArea">
+            <p style="opacity: 0.6;">凝視星空，尋求指引...</p>
+        </div>
+
+        <button onclick="drawCard()">接收訊號</button>
+        
+        <div class="footer">
+            Designed for the Stargazer
+        </div>
+    </div>
+
+    <script>
+        // --- 這裡是可以修改內容的地方 ---
+        // 格式為：{ name: "天體名稱", text: "指引內容" }
+        const cards = [
+            {
+                name: "Sirius 天狼星",
+                text: "即使在最寒冷的冬夜，你依然是最耀眼的存在。不需要透過別人的反射來證明光亮，你本身就是光源。專注於燃燒自己，那些雜訊自然會隱沒於黑暗之中。"
+            },
+            {
+                name: "Moon Phases 月相",
+                text: "盈虧是宇宙的呼吸。當你感到能量低落或只有一半的自己時，請記得這不是缺陷，而是週期。接納現在的陰影，圓滿會在下一個循環中自然抵達。"
+            },
+            {
+                name: "Nebula 星雲",
+                text: "混亂與塵埃並非毀滅，而是孕育恆星的搖籃。你此刻感受到的迷惘與散亂，正是創造力正在重組的過程。在混沌中，保持耐心。"
+            },
+            {
+                name: "Black Hole 黑洞",
+                text: "巨大的引力來自於極致的靜默。不需要急著解釋或外求，向內坍縮，在內心的最深處，你會找到連光都無法逃脫的強大力量。"
+            },
+            {
+                name: "Comet 彗星",
+                text: "有些相遇註定是短暫的軌道交錯。不要因為它的離去而悲傷，要感謝它帶來的尾跡曾劃亮你的夜空。放手，是為了讓它繼續它的旅程，也讓你回到你的軌道。"
+            },
+            {
+                name: "Supernova 超新星",
+                text: "當舊的結構無法再支撐你的能量時，崩塌是必然的。這場爆炸雖然劇烈且痛苦，但它將把構成生命的元素拋灑向宇宙，成為下一個星系的養分。"
+            }
+        ];
+
+        function drawCard() {
+            const display = document.getElementById('displayArea');
+            const button = document.querySelector('button');
+            
+            // 簡單的淡出動畫效果
+            display.style.opacity = 0;
+            
+            setTimeout(() => {
+                // 隨機選取一張牌
+                const randomIndex = Math.floor(Math.random() * cards.length);
+                const card = cards[randomIndex];
+                
+                // 更新內容
+                display.innerHTML = `
+                    <div class="star-name">${card.name}</div>
+                    <div class="guidance-text">${card.text}</div>
+                `;
+                
+                // 淡入
+                display.style.opacity = 1;
+                button.innerText = "再次接收";
+            }, 300);
+        }
+    </script>
+</body>
+</html>
